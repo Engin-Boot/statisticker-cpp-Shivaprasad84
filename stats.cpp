@@ -10,6 +10,16 @@ Stats Statistics::ComputeStatistics(const std::vector<double>& sample) {
     return stats_obj;
 }
 
+std::vector<double> RemoveNANElements(const std::vector<double>& sample)
+{
+    std::vector<double> nan_filtered_sample;
+    for(double element : sample)
+    {
+        if(!isnan(element)) nan_filtered_sample.push_back(element);
+    }
+    return nan_filtered_sample;
+}
+
 void Stats::ComputeAverage(const std::vector<double>& sample)
 {
     if (sample.empty())
@@ -19,16 +29,12 @@ void Stats::ComputeAverage(const std::vector<double>& sample)
     else
     {
         double sum = 0;
-        int sample_size = 0;
-        for (double element : sample)
+        std::vector<double> nan_filtered_sample = RemoveNANElements(sample);
+        for (double element : nan_filtered_sample)
         {
-            if (!isnan(element))
-            {
-               sum += element;
-               sample_size += 1;
-            }
+            sum += element;
         }
-        Stats::average = sum / sample_size;
+        Stats::average = sum / nan_filtered_sample.size();
     }
 }
 
