@@ -1,5 +1,6 @@
 #include "stats.h"
-#include <cmath>
+#include <math.h>
+#include <algorithm>
 
 Stats Statistics::ComputeStatistics(const std::vector<double>& sample) {
     Stats stats_obj;
@@ -11,51 +12,46 @@ Stats Statistics::ComputeStatistics(const std::vector<double>& sample) {
 
 void Stats::ComputeAverage(const std::vector<double>& sample)
 {
-    
-    if(sample.size() == 0) 
+    if (sample.empty())
     {
-        Stats::average = NAN;
+        Stats::average = (double)NAN;
     }
     else
     {
         double sum = 0;
-        for(double element : sample)
+        int sample_size = 0;
+        for (double element : sample)
         {
-            if(element != NAN)
-                sum += element;
+            if (!isnan(element))
+            {
+               sum += element;
+               sample_size += 1;
+            }
         }
-        Stats::average = sum/sample.size();
-    }  
+        Stats::average = sum / sample_size;
+    }
 }
 
 void Stats::ComputeMax(const std::vector<double>& sample)
 {
-    Stats::max = sample[0];
-    if(sample.size() == 0)
+    if (sample.empty())
     {
-        Stats::max = NAN;
-    }  
+        Stats::max = (double)NAN;
+    }
     else
     {
-        for(double element : sample)
-        {
-            if(element > Stats::max) Stats::max = element;
-        }
+        Stats::max = *std::max_element(sample.begin(), sample.end());
     }
 }
 
 void Stats::ComputeMin(const std::vector<double>& sample)
 {
-    Stats::min = sample[0];
-    if(sample.size() == 0)
+    if (sample.empty())
     {
-        Stats::min = NAN;
+        Stats::min = (double)NAN;
     }
     else
     {
-        for(double element : sample)
-        {
-            if(element < Stats::min) Stats::min = element;
-        }
+        Stats::min = *std::min_element(sample.begin(), sample.end());
     }
 }
